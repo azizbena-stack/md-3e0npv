@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c0709">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;700&display=swap">
+<title>Club Demo</title>
+<style>
+  /* Direction : affiche de soirée en boîte de nuit. Noir chaud, halo rouge, boule à facettes en filigrane, grandes capitales condensées. */
+  :root{color-scheme:dark;--bg:#0c0709;--card:#170f13;--line:#2b1d23;--fg:#f6eff1;--mute:#a8969c;--accent:currentColor;--accent-fg:color-mix(in srgb,var(--accent) 65%,#fff);
+        --display:'Anton','Impact','Arial Narrow',sans-serif;--body:'DM Sans',system-ui,sans-serif}
+  *{box-sizing:border-box}
+  body{margin:0;font:16px/1.45 var(--body);color:var(--fg);padding-bottom:104px;min-height:100vh;
+       background:radial-gradient(120% 55% at 50% -8%,color-mix(in srgb,var(--accent) 55%,transparent),transparent 70%),
+                  radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.3px) 0 0/22px 22px,var(--bg);
+       background-attachment:fixed}
+  header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;padding:14px 18px;
+         background:linear-gradient(var(--bg),transparent)}
+  header svg{width:46px;height:46px;color:var(--accent);flex:none;filter:drop-shadow(0 0 14px color-mix(in srgb,var(--accent) 80%,transparent))}
+  h1{margin:0;font:400 1.7rem/1 var(--display);letter-spacing:.05em;text-transform:uppercase}
+  header small{display:block;font:500 .7rem var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-top:4px}
+  #status{margin:0;padding:0 18px;font-size:.75rem;color:var(--mute)}
+  section{display:none;padding:8px 18px 18px;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));align-content:start}
+  section.on{display:grid}
+  h2{grid-column:1/-1;margin:10px 0 2px;font:400 2.1rem/1 var(--display);letter-spacing:.03em;text-transform:uppercase}
+  h2::after{content:"";display:block;width:44px;height:4px;margin-top:10px;border-radius:2px;background:var(--accent-fg)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;min-width:0;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .card img,.card video{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+  .body{padding:16px}
+  .mute{color:var(--mute);font-size:.8rem}
+  a{color:var(--accent-fg)}
+  .btn{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:12px 22px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;
+       font-weight:700;font-size:.92rem;box-shadow:0 6px 20px color-mix(in srgb,var(--accent) 55%,transparent)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chips i{font-style:normal;font-size:.8rem;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--fg)}
+  /* soirée à la une : affiche */
+  .hero{grid-column:1/-1;position:relative;border:0;padding:24px 22px 26px;
+        background:linear-gradient(155deg,var(--accent),color-mix(in srgb,var(--accent) 35%,#0c0709) 62%,#0c0709)}
+  .hero .mark{position:absolute;right:-50px;top:-40px;width:250px;height:250px;opacity:.16;transform:rotate(14deg)}
+  .hero .tag{display:inline-block;padding:5px 12px;border-radius:999px;background:rgba(0,0,0,.35);font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .hero .big{display:flex;align-items:baseline;gap:12px;margin:18px 0 4px;font-family:var(--display);text-transform:uppercase}
+  .hero .big b{font-weight:400;font-size:5.4rem;line-height:.9}
+  .hero .big span{font-size:1.9rem;line-height:1}
+  .hero h3{margin:16px 0 14px;font:400 1.7rem/1.05 var(--display);letter-spacing:.03em;text-transform:uppercase}
+  .hero .btn{background:#fff;color:#1a0508;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  /* soirées suivantes */
+  .ev{display:grid;grid-template-columns:76px 1fr;align-items:center}
+  .ev .when{margin:14px 0 14px 14px;padding:10px 0;border-radius:14px;border:2px solid var(--accent-fg);text-align:center;font-family:var(--display);text-transform:uppercase}
+  .ev .when b{display:block;font-weight:400;font-size:2.2rem;line-height:1}
+  .ev .when span{font-size:.9rem;letter-spacing:.08em;color:var(--accent-fg)}
+  .ev h3{margin:0 0 8px;font:400 1.3rem/1.1 var(--display);letter-spacing:.03em;text-transform:uppercase}
+  .ev .btn{margin-top:12px;padding:9px 18px;font-size:.85rem}
+  /* artistes */
+  .art .body{display:flex;align-items:center;gap:16px}
+  .art .ini{flex:none;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font:400 1.6rem var(--display);
+            background:radial-gradient(circle at 30% 25%,var(--accent-fg),var(--accent) 70%);box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--accent)}
+  .art h3{margin:0 0 4px;font:400 1.35rem/1.1 var(--display);letter-spacing:.03em;text-transform:uppercase}
+  .art a{font-size:.85rem}
+  .play{display:grid;place-items:center;aspect-ratio:1;font:400 2.4rem var(--display);text-transform:uppercase}
+  /* navigation flottante */
+  nav{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;padding:6px;border-radius:26px;
+      background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);box-shadow:0 10px 40px rgba(0,0,0,.6)}
+  nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;border-radius:20px;color:var(--mute);padding:9px 2px 8px;font:500 .68rem var(--body);cursor:pointer}
+  nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  nav button.on{color:#fff;background:var(--accent)}
+  .foot{text-align:center;font-size:.75rem;color:var(--mute);margin:8px 18px 0}
+  .demo{margin:0;padding:6px 12px;text-align:center;font-size:.72rem;letter-spacing:.06em;background:#ffd400;color:#000;font-weight:700}
+  #lock{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:28px;text-align:center;background:rgba(12,7,9,.96)}
+  #lock[hidden]{display:none}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--accent-fg);outline-offset:2px}
+  @media (prefers-reduced-motion:no-preference){.card{animation:up .45s ease both}.card:nth-of-type(2){animation-delay:.07s}.card:nth-of-type(3){animation-delay:.14s}.card:nth-of-type(4){animation-delay:.21s}
+    @keyframes up{from{opacity:0;transform:translateY(14px)}}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="logo" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="50" fill="currentColor"/>
+    <clipPath id="ball"><circle cx="50" cy="54" r="28"/></clipPath>
+    <circle cx="50" cy="54" r="28" fill="#fff"/>
+    <g clip-path="url(#ball)" stroke="currentColor" stroke-width="2.4" fill="none">
+      <path d="M20 42h60M20 54h60M20 66h60"/><path d="M50 24v60"/>
+      <ellipse cx="50" cy="54" rx="11" ry="28"/><ellipse cx="50" cy="54" rx="21" ry="28"/>
+    </g>
+    <path d="M50 12v14" stroke="#fff" stroke-width="3"/>
+    <path d="M80 22l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/>
+  </symbol>
+  <symbol id="ball" viewBox="0 0 100 100">
+    <circle cx="50" cy="54" r="40" fill="#fff"/>
+    <g stroke="#000" stroke-width="3" fill="none" opacity=".6"><path d="M10 40h80M10 54h80M10 68h80M50 14v80"/><ellipse cx="50" cy="54" rx="16" ry="40"/><ellipse cx="50" cy="54" rx="30" ry="40"/></g>
+  </symbol></defs></svg>
+
+<p class="demo">Démo · maquette non officielle · contenus fictifs</p>
+<header><svg role="img" aria-label="Logo"><use href="#logo"/></svg><div><h1 id="name"></h1><small id="sub"></small></div></header>
+<p id="status"></p>
+
+<section id="events" class="on"></section>
+<section id="artists"></section>
+<section id="videos"></section>
+<section id="news"></section>
+<section id="playlist"></section>
+
+<p class="foot"><a href="index.html">← Tous les clubs</a></p>
+
+<nav>
+  <button data-t="events" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Soirées</button>
+  <button data-t="artists"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Artistes</button>
+  <button data-t="videos"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/></svg>Vidéos</button>
+  <button data-t="news"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".6"/></svg>Actus</button>
+  <button data-t="playlist"><svg viewBox="0 0 24 24"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>Playlist</button>
+</nav>
+
+<script>
+const REFRESH_MS = 5 * 60 * 1000; // mise à jour automatique
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = d => new Date(d).toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+const h2 = t => `<h2>${t}</h2>`;
+
+// Visuels de démo générés en local (aucun réseau requis)
+const art = (i, label) => 'data:image/svg+xml,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${ACCENT}" stop-opacity="${1 - i*0.1}"/><stop offset="1" stop-color="#0c0709"/></linearGradient></defs><rect width="600" height="600" fill="url(#g)"/><text x="300" y="320" font-size="52" font-weight="700" fill="#fff" text-anchor="middle" font-family="Impact,sans-serif">${label.toUpperCase()}</text></svg>`);
+let ACCENT = '#b3121b';
+const demoPosts = ig => ['Aftermovie', 'Line-up', 'Ambiance', 'Teaser', 'Résidents', 'Live set'].map((l, i) => ({
+  media_type: i % 3 === 0 ? 'VIDEO' : 'IMAGE', media_url: i % 3 === 0 ? '' : art(i, l), thumbnail_url: art(i, '▶ ' + l),
+  caption: `${l} — exemple de publication`, permalink: ig || 'https://instagram.com',
+  timestamp: new Date(Date.now() - i * 864e5).toISOString()
+}));
+
+document.querySelector('nav').onclick = e => {
+  const t = e.target.closest('button')?.dataset.t; if (!t) return;
+  document.querySelectorAll('nav button,section').forEach(el => el.classList.toggle('on', el.dataset.t === t || el.id === t));
+  scrollTo(0, 0);
+};
+
+const eventCard = (e, i) => {
+  const d = new Date(e.date + 'T12:00:00');
+  const day = d.getDate(), mon = d.toLocaleDateString('fr-FR',{month:'short'}), wd = d.toLocaleDateString('fr-FR',{weekday:'long'});
+  const chips = `<div class="chips">${e.artists.map(a => `<i>${esc(a)}</i>`).join('')}</div>`;
+  const link = `<a class="btn" href="${esc(e.ticket)}" target="_blank" rel="noopener">Réserver ma place →</a>`;
+  if (i === 0) return `<div class="card hero"><svg class="mark" aria-hidden="true"><use href="#ball"/></svg>
+    <span class="tag">Prochaine soirée</span>
+    <div class="big"><b>${day}</b><span>${mon}<br>${wd}</span></div><h3>${esc(e.title)}</h3>${chips}${link}</div>`;
+  return `<div class="card ev"><div class="when"><b>${day}</b><span>${mon}</span></div>
+    <div class="body"><h3>${esc(e.title)}</h3>${chips}${link.replace('Réserver ma place →','Réserver')}</div></div>`;
+};
+
+async function load() {
+  const id = new URLSearchParams(location.search).get('c') || '';
+  if (!/^[a-z0-9-]+\/[a-z0-9-]+$/.test(id)) { location.href = 'index.html'; return; }
+  const c = (await (await fetch('clubs.json', {cache: 'no-store'})).json())[id];
+  if (!c) { location.href = 'index.html'; return; }
+  document.title = $('name').textContent = c.name;
+  $('sub').textContent = [c.style, c.ville].filter(Boolean).join(' · ');
+  document.documentElement.style.setProperty('--accent', ACCENT = c.color);
+  // Soirées d'exemple : les 3 prochains samedis
+  const sat = new Date(); sat.setDate(sat.getDate() + (6 - sat.getDay() + 7) % 7);
+  c.events = c.soirees.map((title, k) => ({ title: title + ' (exemple)', artists: [['DJ Nova','Kaito'],['Mira','DJ Sol'],['Kaito','Zeno']][k],
+    date: new Date(sat.getTime() + k * 7 * 864e5).toISOString().slice(0, 10), ticket: c.lien || '#' }));
+  const DEMO_POSTS = demoPosts(c.instagram);
+
+  const today = new Date().toISOString().slice(0, 10);
+  const events = c.events.filter(e => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  $('events').innerHTML = h2('À venir') + (events.map(eventCard).join('') || '<p class="mute">Aucune soirée programmée.</p>');
+
+  const names = [...new Set(events.flatMap(e => e.artists))];
+  $('artists').innerHTML = h2('Line-up') + names.map(n => `<div class="card art"><div class="body"><div class="ini">${esc(n[0])}</div>
+    <div><h3>${esc(n)}</h3><a href="https://open.spotify.com/search/${encodeURIComponent(n)}" target="_blank" rel="noopener">Écouter sur Spotify →</a></div></div></div>`).join('');
+
+  $('playlist').innerHTML = h2('Playlist') + `<div class="card hero"><svg class="mark" aria-hidden="true"><use href="#ball"/></svg>
+    <span class="tag">Spotify</span><div class="big"><span style="font-size:2.6rem">La playlist du club</span></div>
+    <p style="margin:0 0 4px">L'ambiance de la maison, à écouter avant de venir.</p>
+    <a class="btn" href="https://open.spotify.com/playlist/${esc(c.spotify_playlist_id)}" target="_blank" rel="noopener">Ouvrir dans Spotify →</a></div>`;
+
+  let posts = DEMO_POSTS;
+  if (c.instagram_token) {
+    try {
+      const j = await (await fetch('https://graph.instagram.com/me/media?limit=30&fields=caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=' + encodeURIComponent(c.instagram_token))).json();
+      if (j.error) throw new Error(j.error.message);
+      posts = j.data;
+    } catch (e) { $('status').textContent = 'Instagram : ' + e.message; }
+  }
+  const card = p => `<div class="card">${p.media_type === 'VIDEO'
+      ? `<video src="${esc(p.media_url)}" poster="${esc(p.thumbnail_url)}" controls playsinline preload="none"></video>`
+      : `<img src="${esc(p.media_url)}" loading="lazy" alt="">`}
+    <div class="body"><span class="mute">${fmt(p.timestamp)}</span><br>${esc((p.caption || '').slice(0, 160))}<br>
+    <a href="${esc(p.permalink)}" target="_blank" rel="noopener">Voir sur Instagram →</a></div></div>`;
+  $('news').innerHTML = h2('Actus') + posts.map(card).join('');
+  $('videos').innerHTML = h2('Vidéos') + (posts.filter(p => p.media_type === 'VIDEO').map(card).join('') || '<p class="mute">Pas encore de vidéo.</p>');
+}
+
+const refresh = () => load().catch(e => $('status').textContent = 'Erreur : ' + e.message);
+refresh();
+setInterval(refresh, REFRESH_MS);
+document.addEventListener('visibilitychange', () => !document.hidden && refresh());
+</script>
+</body>
+</html>
