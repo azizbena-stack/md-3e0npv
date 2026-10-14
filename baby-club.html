@@ -122,6 +122,40 @@ nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
 nav .on{color:var(--a)}
 #toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);background:#fff;color:#000;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;transition:.3s;pointer-events:none;z-index:10;white-space:nowrap}
 #toast.on{opacity:1;transform:translate(-50%,0)}
+/* Carte de fidélité */
+.fid{position:relative;border-radius:18px;padding:18px;margin:0 16px 12px;background:linear-gradient(135deg,color-mix(in srgb,var(--a) 38%,var(--card)),var(--card) 55%,color-mix(in srgb,var(--a2) 22%,var(--card)));border:1px solid var(--a);box-shadow:var(--glow);overflow:hidden}
+.fid .top{display:flex;align-items:center;gap:10px}
+.fid .top img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.fid .top b{display:block;font:var(--fdw) 17px var(--fd),sans-serif;text-transform:var(--fdt);letter-spacing:var(--fdl)}
+.fid .no{margin-left:auto;font:600 11px var(--fb);letter-spacing:.15em;color:var(--mut)}
+.stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0 10px}
+.stamps i{aspect-ratio:1;border-radius:50%;border:1.5px dashed var(--line);display:grid;place-items:center;font-style:normal;font-size:12px;color:var(--mut)}
+.stamps i.on{border:0;background:var(--a);color:var(--aon);box-shadow:var(--glow);font-size:16px}
+.stamps i.gift{border-color:var(--a2);color:var(--a2)}
+.fid canvas{width:84px;height:84px;background:#fff;border:5px solid #fff;border-radius:8px;image-rendering:pixelated;float:right;margin-left:12px}
+.mini{display:flex;align-items:center;gap:12px;cursor:pointer}
+.mini .dots{display:flex;gap:4px;margin-top:6px}
+.mini .dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.mini .dots i.on{background:var(--a)}
+#lock{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:28px;text-align:center;background:color-mix(in srgb,var(--bg) 96%,transparent)}
+#lock[hidden]{display:none}
+.vid{position:absolute;top:8px;right:8px;font-size:12px}
+/* Réservation VIP + plan de table */
+.plan{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:14px;border-radius:16px;background:color-mix(in srgb,var(--card) 70%,var(--bg));border:1px solid var(--line)}
+.plan .dj,.plan .floor,.plan .bar{grid-column:span 6;text-align:center;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);border:1px dashed var(--line);border-radius:10px;padding:8px}
+.plan .floor{grid-column:2 / span 4;grid-row:span 2;display:grid;place-items:center;background:repeating-linear-gradient(45deg,transparent 0 8px,color-mix(in srgb,var(--a) 8%,transparent) 8px 16px)}
+.plan .bar{grid-column:span 6}
+.tb{aspect-ratio:1;border-radius:50%;border:1.5px solid var(--a2);font:700 11px var(--fb);color:var(--txt);display:grid;place-items:center;background:var(--card)}
+.tb.vip{border-color:var(--a);border-radius:12px}
+.tb.pris{opacity:.3;text-decoration:line-through;cursor:not-allowed}
+.tb.sel{background:var(--a);color:var(--aon);box-shadow:var(--glow)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--mut);margin:10px 0 0}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:50%;border:1.5px solid var(--a2);margin-right:5px;vertical-align:-1px}
+.leg i.v{border-color:var(--a);border-radius:3px}.leg i.p{opacity:.3}
+select,.step{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--txt);font:inherit;margin-bottom:10px}
+.step{display:flex;align-items:center;justify-content:space-between}
+.step button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);font-size:18px}
+.resa{border-left:3px solid var(--a);padding-left:10px;margin-top:10px}
 button:focus-visible,a:focus-visible{outline:2px solid var(--a2);outline-offset:2px}
 header b{font-family:'Comfortaa',sans-serif;text-transform:none;letter-spacing:0;font-size:20px;color:transparent;-webkit-text-stroke:1.2px #fff}.hero h1{background:linear-gradient(180deg,#fff 0%,#c9d4df 45%,#7d8893 60%,#eef3f8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(169,216,255,.55));font-size:38px}.hero .k{color:var(--a2);text-shadow:0 0 12px rgba(169,216,255,.7)}
 </style>
@@ -134,6 +168,9 @@ header b{font-family:'Comfortaa',sans-serif;text-transform:none;letter-spacing:0
   <div class="hero"><img id="hero" alt=""><div class="over"><div class="k">Prochaine soirée</div><h1 id="nx-name"></h1><div class="mut" id="nx-when"></div></div></div>
   <div class="count" id="count"></div>
   <div class="pad" style="margin-top:14px"><a class="btn" id="nx-buy" target="_blank" rel="noopener">Prendre mon billet</a></div>
+  <div class="card mini" style="margin-top:12px" onclick="go('moi')"><div style="font-size:26px">🎟️</div><div style="flex:1"><b class="u" style="font-size:14px">Ma carte de fidélité</b><div class="mut" id="fid-mini"></div><div class="dots" id="fid-dots"></div></div><span class="mut">›</span></div>
+  <div class="pad" style="margin:0 0 12px"><button class="btn ghost" onclick="go('vip')">Réserver une table VIP</button><button class="btn ghost" onclick="guest()" id="guest-bt">M'inscrire sur la guest list</button></div>
+  <div class="card" id="meteo-home"><span class="mut">Météo…</span></div>
   <h2>Le club</h2>
   <div class="card about" id="about"></div>
   <div class="stats" id="stats"></div>
@@ -171,6 +208,7 @@ header b{font-family:'Comfortaa',sans-serif;text-transform:none;letter-spacing:0
 <section id="moments">
   <h2>Moments</h2>
   <p class="mut pad" style="margin:-4px 0 12px" id="m-txt"></p>
+  <div class="chips" id="mchips"><button data-k="all" class="on">Tout</button><button data-k="p">Photos</button><button data-k="reel">▶ Vidéos</button></div>
   <div class="grid" id="grid"></div>
 </section>
 
@@ -188,6 +226,7 @@ header b{font-family:'Comfortaa',sans-serif;text-transform:none;letter-spacing:0
     <p class="mut" style="margin:6px 0 12px">Si c'est complet, inscris-toi : une place libérée, et tu es prévenu·e en premier.</p>
     <button class="btn ghost" id="wait" onclick="waitlist()">Liste d'attente</button>
   </div>
+  <div class="pad" style="margin-bottom:12px"><button class="btn ghost" onclick="go('vip')">Table VIP & plan de salle</button></div>
   <h2>Programme</h2>
   <p class="mut pad" style="margin:-4px 0 10px">Horaires indicatifs (démo) : le club les annonce sur Instagram.</p>
   <div class="tl" id="tl"></div>
@@ -210,9 +249,36 @@ header b{font-family:'Comfortaa',sans-serif;text-transform:none;letter-spacing:0
   </div>
 </section>
 
+<section id="vip">
+  <h2>Réserver une table</h2>
+  <p class="mut pad" style="margin:-4px 0 12px">Choisis ta table sur le plan, puis envoie ta demande. Plan et prix d'exemple (démo) : le club met les siens.</p>
+  <div class="pad"><div class="plan" id="plan"></div>
+  <div class="leg"><span><i></i>Table</span><span><i class="v"></i>Carré VIP</span><span><i class="p"></i>Déjà réservée</span></div></div>
+  <div class="card" style="margin-top:14px">
+    <div class="row"><span>Table choisie</span><b id="vip-t">—</b></div>
+    <select id="vip-ev" aria-label="Soirée"></select>
+    <div class="step"><span>Personnes</span><span style="display:flex;align-items:center;gap:12px"><button onclick="nb(-1)" aria-label="Moins">−</button><b id="vip-n">4</b><button onclick="nb(1)" aria-label="Plus">+</button></span></div>
+    <select id="vip-f" aria-label="Formule"></select>
+    <input type="text" id="vip-msg" placeholder="Un anniversaire ? Une demande ?" style="width:100%;margin:0 0 10px">
+    <button class="btn" onclick="sendVip()">Envoyer ma demande</button>
+    <p class="mut" style="margin-top:8px;text-align:center">Le club te confirme par message (démo : rien n'est envoyé).</p>
+  </div>
+  <h2>Mes réservations</h2><div class="card" id="my-resa"></div>
+  <div class="pad"><button class="btn ghost" onclick="go('home')">Retour</button></div>
+</section>
+
 <section id="moi">
   <h2>Mon profil</h2>
   <input type="text" id="name" placeholder="Ton prénom" oninput="setName(this.value)">
+  <h2>Carte de fidélité</h2>
+  <div class="fid">
+    <div class="top"><img src="baby-club-logo.jpg" alt=""><div><b id="fid-club"></b><span class="mut" id="fid-name"></span></div><span class="no" id="fid-no"></span></div>
+    <div class="stamps" id="stamps"></div>
+    <canvas id="fid-qr" width="21" height="21"></canvas>
+    <div class="mut" id="fid-txt"></div>
+  </div>
+  <div class="card" id="rewards"></div>
+  <div class="pad" style="margin-bottom:6px"><button class="btn" onclick="stamp()">Faire tamponner ma carte</button><p class="mut" style="margin-top:8px;text-align:center">Démo : en vrai, le staff scanne ton QR à l'entrée.</p></div>
   <div class="card" id="me-sum"></div>
   <h2>Réglages</h2>
   <div class="card">
@@ -227,6 +293,30 @@ header b{font-family:'Comfortaa',sans-serif;text-transform:none;letter-spacing:0
   <h2>Espace gérant</h2>
   <p class="mut pad" style="margin:-4px 0 12px">Chiffres fictifs pour la démo.</p>
   <div class="kpi" id="kpi"></div>
+  <div class="card">
+    <b class="u" style="font-size:13px">Abonnement</b>
+    <div class="row"><span>29 € / mois <span class="mut">(exemple de tarif)</span></span><b id="sub-st"></b></div>
+    <p class="mut">Les clients utilisent l'app gratuitement, seul le club s'abonne.</p>
+    <button class="btn ghost" style="margin-top:10px" onclick="toggleSub()" id="sub-bt"></button>
+  </div>
+  <div class="card">
+    <b class="u" style="font-size:13px">Ajouter une soirée</b>
+    <input type="text" id="ad-nom" placeholder="Nom de la soirée" style="width:100%;margin:10px 0 8px">
+    <input type="date" id="ad-date" style="width:100%;margin:0 0 8px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--txt);font:inherit">
+    <input type="text" id="ad-art" placeholder="Artistes, séparés par une virgule" style="width:100%;margin:0 0 10px">
+    <button class="btn" onclick="addEvent()">Ajouter la soirée</button>
+    <div id="ad-list"></div>
+  </div>
+  <div class="card">
+    <b class="u" style="font-size:13px">Réservations VIP</b>
+    <div id="g-resa"></div>
+    <div class="row"><span>Guest list (prochaine soirée)</span><b id="g-guest"></b></div>
+  </div>
+  <div class="card">
+    <b class="u" style="font-size:13px">Carte de fidélité</b>
+    <div class="row"><span>Cartes actives</span><b>1 284</b></div><div class="row"><span>Tampons cette semaine</span><b>356</b></div><div class="row"><span>Récompenses données</span><b>41</b></div>
+    <button class="btn ghost" style="margin-top:10px" onclick="toast('Scanner : dans la version officielle')">Tamponner une carte (scanner)</button>
+  </div>
   <div class="card"><b class="u" style="font-size:13px">D'où vient le public</b><div id="cities"></div></div>
   <div class="card"><b class="u" style="font-size:13px">Artistes les plus attendus</b><div id="wanted"></div></div>
   <div class="card">
@@ -237,6 +327,7 @@ header b{font-family:'Comfortaa',sans-serif;text-transform:none;letter-spacing:0
   </div>
 </section>
 
+<div id="lock" hidden><div><h2 style="justify-content:center">Application suspendue</h2><p class="mut" style="margin:8px 0 16px">L'abonnement du club est inactif (simulation). Tout revient dès que le gérant le réactive.</p><button class="btn" onclick="toggleSub()">Réactiver (démo)</button></div></div>
 <nav id="nav">
   <button data-t="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Accueil</button>
   <button data-t="events"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Soirées</button>
@@ -259,7 +350,7 @@ st.been ||= []; st.fav ||= []; st.sw ||= {};
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch {} };
 const fmt = (d, o) => new Date(d).toLocaleDateString('fr-FR', o);
 const now = () => new Date();
-const EVENTS = C.soirees.map((e, i) => ({...e, id: 'e' + i, img: e.img || String(i % C.posts.length + 1)}));
+const EVENTS = [...C.soirees, ...(st.extra || [])].sort((a, b) => a.date.localeCompare(b.date)).map((e, i) => ({...e, id: 'e' + i, img: e.img || String(i % C.posts.length + 1)}));
 const PAST = C.passees.map((e, i) => ({...e, id: 'p' + i, lineup: e.lineup || [], img: e.img || String((i + 5) % C.posts.length + 1)}));
 const upcoming = () => EVENTS.filter(e => new Date(e.date) > new Date(+now() - 6 * 3600e3));
 const NEXT = upcoming()[0] || EVENTS[EVENTS.length - 1];
@@ -287,11 +378,11 @@ function tick() {
 tick(); setInterval(tick, 1000);
 $('about').innerHTML = `<b>${esc(C.slogan)}</b>${esc(C.apropos)}`;
 $('stats').innerHTML = C.chiffres.map(([v, l]) => `<div><b>${esc(v)}</b><span class="mut">${esc(l)}</span></div>`).join('');
-$('links').innerHTML = [['Instagram', 'https://www.instagram.com/' + C.instagram + '/'], ...C.liens].map(([l, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`).join('')
+$('links').innerHTML = [['Instagram', 'https://www.instagram.com/' + C.instagram + '/'], ...C.liens, ['Spotify', C.spotify || 'https://open.spotify.com/search/' + encodeURIComponent(C.nom)]].map(([l, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`).join('')
   + `<a href="#" onclick="share();return false">Partager</a>`;
 function renderPoll() {
   const voted = st.vote != null, tot = C.sondage.reduce((a, [, n]) => a + n, 0) + (voted ? 1 : 0);
-  $('poll').innerHTML = `<p class="mut">Vote pour l'artiste que tu veux voir au ${esc(C.nom)} (votes fictifs).</p>` + C.sondage.map(([a, n], i) => {
+  $('poll').innerHTML = `<p class="mut">${esc(C.sondage_q || 'Vote pour l\'artiste que tu veux voir au club')} (votes fictifs).</p>` + C.sondage.map(([a, n], i) => {
     const p = Math.round((n + (st.vote === i ? 1 : 0)) / tot * 100);
     return `<button class="${st.vote === i ? 'me' : ''}" onclick="vote(${i})"><i style="width:${voted ? p : 0}%"></i><span><b>${esc(a)}</b>${voted ? p + ' %' : ''}</span></button>`;
   }).join('');
@@ -343,24 +434,29 @@ $('arts').onclick = e => { const b = e.target.closest('.fav'); if (!b) return; c
 
 // Moments
 $('m-txt').textContent = `Les dernières publications de @${C.instagram}. Touche une photo pour l'ouvrir sur Instagram.`;
-$('grid').innerHTML = C.posts.map(([code, cap, type], i) =>
-  `<a href="https://www.instagram.com/${type || 'p'}/${code}/" target="_blank" rel="noopener"><img loading="lazy" src="${img(i + 1)}" alt="${esc(cap)}"><span>${type ? '▶ ' : ''}${esc(cap)}</span></a>`).join('');
+function renderGrid(k = 'all') {
+  $('grid').innerHTML = C.posts.map(([code, cap, type], i) => (k === 'all' || (type || 'p') === k) ?
+    `<a href="https://www.instagram.com/${type || 'p'}/${code}/" target="_blank" rel="noopener"><img loading="lazy" src="${img(i + 1)}" alt="${esc(cap)}">${type ? '<span class="vid">▶</span>' : ''}<span>${esc(cap)}</span></a>` : '').join('') || '<p class="mut pad">Pas encore de vidéo.</p>';
+}
+renderGrid();
+$('mchips').onclick = e => { const b = e.target.closest('button'); if (!b) return; [...$('mchips').children].forEach(c => c.classList.toggle('on', c === b)); renderGrid(b.dataset.k); };
 
 // Jour J
 $('tk-club').textContent = C.nom; $('tk-ev').textContent = NEXT.nom;
-$('tk-when').textContent = fmt(NEXT.date, {weekday:'short', day:'numeric', month:'short'}) + ' · ' + NEXT.date.slice(11, 16) + ' → ' + C.fermeture;
-(function drawQR() { // ponytail: faux QR décoratif pour la démo, le vrai billet vient de la billetterie
-  const c = $('qr').getContext('2d'); let s = 7;
+$('tk-when').textContent = fmt(NEXT.date, {weekday:'short', day:'numeric', month:'short'}) + ' · ' + NEXT.date.slice(11, 16) + (C.fermeture ? ' → ' + C.fermeture : '');
+function drawQR(id, n, seed) { // ponytail: faux QR décoratif pour la démo, le vrai billet vient de la billetterie
+  const c = $(id).getContext('2d'); let s = seed;
   const r = () => (s = s * 16807 % 2147483647) / 2147483647;
-  for (let y = 0; y < 29; y++) for (let x = 0; x < 29; x++) {
-    const f = [[0, 0], [22, 0], [0, 22]].find(([a, b]) => x >= a && x < a + 7 && y >= b && y < b + 7);
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const f = [[0, 0], [n - 7, 0], [0, n - 7]].find(([a, b]) => x >= a && x < a + 7 && y >= b && y < b + 7);
     let on = r() > .5;
     if (f) { const dx = x - f[0], dy = y - f[1]; on = dx === 0 || dy === 0 || dx === 6 || dy === 6 || (dx > 1 && dx < 5 && dy > 1 && dy < 5); }
     c.fillStyle = on ? '#000' : '#fff'; c.fillRect(x, y, 1, 1);
   }
-})();
+}
+drawQR('qr', 29, 7);
 // Programme indicatif : warm-up, puis la tête d'affiche, puis fermeture
-const SETS = [[NEXT.date.slice(11, 16), 'Ouverture des portes'], ...NEXT.lineup.slice().reverse().map((a, i, l) => [['00:30', '02:00', '03:30'][i + 3 - l.length] || '01:00', a]), [C.fermeture, 'Fermeture']];
+const SETS = [[NEXT.date.slice(11, 16), 'Ouverture des portes'], ...NEXT.lineup.slice(0, 3).reverse().map((a, i, l) => [['00:30', '02:00', '03:30'][i + 3 - l.length], a]), ...(C.fermeture ? [[C.fermeture, 'Fermeture']] : [])];
 function renderSets() {
   const base = new Date(NEXT.date.slice(0, 10) + 'T00:00'), t = now();
   const at = hm => { const [h, m] = hm.split(':').map(Number); return new Date(+base + ((h < 12 ? h + 24 : h) * 60 + m) * 60000); };
@@ -376,9 +472,11 @@ const day = NEXT.date.slice(0, 10);
 fetch(`https://api.open-meteo.com/v1/forecast?latitude=${C.lat}&longitude=${C.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FParis&forecast_days=16`)
   .then(r => r.json()).then(d => {
     const D = d.daily, i = D.time.indexOf(day), j = i < 0 ? 0 : i;
+    const k = D.time.indexOf(new Date().toLocaleDateString('sv-SE'));
+    if (k >= 0) $('meteo-home').innerHTML = `<div class="row"><span>Aujourd'hui à ${esc(C.ville)} ${wIcon(D.weathercode[k])}</span><b>${Math.round(D.temperature_2m_min[k])}° / ${Math.round(D.temperature_2m_max[k])}°</b></div>`;
     $('meteo').innerHTML = `<div class="row"><span>${i < 0 ? 'Aujourd\'hui' : fmt(day, {weekday:'short', day:'numeric', month:'short'})} ${wIcon(D.weathercode[j])}</span><span>${Math.round(D.temperature_2m_min[j])}° / ${Math.round(D.temperature_2m_max[j])}°</span></div>
       <p class="mut" style="margin-top:8px">Prévoir une veste pour la sortie : le vestiaire est là pour ça.</p>`;
-  }).catch(() => $('meteo').innerHTML = '<span class="mut">Météo indisponible hors ligne.</span>');
+  }).catch(() => { $('meteo').innerHTML = '<span class="mut">Météo indisponible hors ligne.</span>'; $('meteo-home').hidden = true; });
 $('goto').innerHTML = `<div class="row"><span>📍 ${esc(C.nom)}</span><span class="mut">${esc(C.adresse)}</span></div>
   <div class="row"><span>🕛 Horaires</span><span class="mut">${esc(C.horaires)}</span></div>
   ${C.tel ? `<div class="row"><span>📞 Réservation</span><a class="mut" href="tel:${esc(C.tel)}">${esc(C.tel)}</a></div>` : ''}
@@ -398,7 +496,7 @@ $('review').value = st.review || '';
 function sendReview() { if (!st.note) return toast('Choisis une note'); st.review = $('review').value.trim(); save(); toast('Merci pour ton avis'); }
 
 // Moi
-function setName(v) { st.name = v; save(); $('tk-name').textContent = v || 'Invité·e'; }
+function setName(v) { st.name = v; save(); $('tk-name').textContent = v || 'Invité·e'; renderFid(); }
 function renderMe() {
   $('name').value = st.name || ''; $('tk-name').textContent = st.name || 'Invité·e';
   const L = LEVELS.filter(l => st.been.length >= l[0]).pop();
@@ -410,6 +508,70 @@ document.querySelectorAll('.sw').forEach(b => b.onclick = () => { st.sw[b.datase
 function wipe() { if (!confirm('Effacer ton passeport, tes favoris et tes réglages ?')) return; try { localStorage.removeItem(KEY); } catch {} location.reload(); }
 function install() { toast(/iPhone|iPad/.test(navigator.userAgent) ? 'Safari : Partager ⬆️ puis « Sur l\'écran d\'accueil »' : 'Menu ⋮ puis « Ajouter à l\'écran d\'accueil »'); }
 
+// Carte de fidélité (récompenses d'exemple, le club choisit les siennes)
+const REWARDS = C.fidelite || [[3, 'Vestiaire offert'], [5, 'Une conso offerte'], [10, 'Une entrée offerte']];
+st.no ||= String(Math.floor(Math.random() * 9e5) + 1e5);
+st.stamps ||= 0;
+function renderFid() {
+  const n = st.stamps % 10, gifts = REWARDS.map(r => r[0]);
+  $('fid-club').textContent = C.court; $('fid-name').textContent = st.name || 'Membre'; $('fid-no').textContent = 'N° ' + st.no;
+  $('stamps').innerHTML = Array.from({length: 10}, (_, i) => `<i class="${i < n ? 'on' : gifts.includes(i + 1) ? 'gift' : ''}">${i < n ? '★' : gifts.includes(i + 1) ? '🎁' : i + 1}</i>`).join('');
+  const nx = REWARDS.find(r => r[0] > n);
+  $('fid-txt').textContent = nx ? `Encore ${nx[0] - n} tampon${nx[0] - n > 1 ? 's' : ''} pour : ${nx[1].toLowerCase()}.` : 'Carte complète !';
+  $('rewards').innerHTML = '<b class="u" style="font-size:13px">Récompenses (exemples)</b>' + REWARDS.map(([k, l]) => `<div class="row"><span>${k} tampons</span><span class="${n >= k ? '' : 'mut'}">${n >= k ? '✓ ' : ''}${esc(l)}</span></div>`).join('');
+  $('fid-mini').textContent = `${n} / 10 tampons` + (nx ? ` · ${nx[1].toLowerCase()} à ${nx[0]}` : '');
+  $('fid-dots').innerHTML = Array.from({length: 10}, (_, i) => `<i class="${i < n ? 'on' : ''}"></i>`).join('');
+}
+function stamp() {
+  st.stamps++; save(); renderFid();
+  const r = REWARDS.find(r => r[0] === st.stamps % 10 || (r[0] === 10 && st.stamps % 10 === 0));
+  toast(r ? '🎁 Récompense débloquée : ' + r[1] : 'Tampon ajouté ★');
+}
+drawQR('fid-qr', 21, +st.no);
+
+// Abonnement du club (simulation Club Demo)
+function renderSub() { const off = st.sub === 'off'; $('lock').hidden = !off; $('sub-st').textContent = off ? 'Impayé' : 'Actif'; $('sub-bt').textContent = off ? 'Réactiver l\'abonnement' : 'Simuler un impayé'; }
+function toggleSub() { st.sub = st.sub === 'off' ? 'on' : 'off'; save(); renderSub(); }
+
+// Soirées ajoutées par le gérant (restent dans ce navigateur)
+function addEvent() {
+  const nom = $('ad-nom').value.trim(), d = $('ad-date').value;
+  if (!nom || !d) return toast('Nom et date obligatoires');
+  (st.extra ||= []).push({nom, date: d + 'T23:59', lineup: $('ad-art').value.split(',').map(s => s.trim()).filter(Boolean), genres: ['Ajoutée']});
+  save(); location.reload();
+}
+function renderAdded() { $('ad-list').innerHTML = (st.extra || []).map((e, i) => `<div class="row"><span>${esc(e.nom)} · ${fmt(e.date, {day:'numeric', month:'short'})}</span><button class="been" onclick="st.extra.splice(${i},1);save();location.reload()">Supprimer</button></div>`).join(''); }
+
+// Réservation VIP + plan de table (exemple : le club met son vrai plan et ses prix)
+const FORMULES = C.formules || [['Table · 1 bouteille', 'dès 150 €'], ['Carré VIP · 2 bouteilles', 'dès 300 €'], ['Pack anniversaire', 'gâteau + bouteille + cierges'], ['Champagne', 'dès 250 €']];
+const TABLES = Array.from({length: 14}, (_, i) => ({id: (i < 4 ? 'V' : 'T') + (i < 4 ? i + 1 : i - 3), vip: i < 4, pris: [2, 6, 11].includes(i)}));
+let vipT = null, vipN = 4;
+st.resa ||= [];
+function renderPlan() {
+  const t = i => { const x = TABLES[i]; return `<button class="tb ${x.vip ? 'vip' : ''} ${x.pris ? 'pris' : ''} ${vipT === x.id ? 'sel' : ''}" ${x.pris ? 'disabled' : ''} onclick="vipT='${x.id}';renderPlan()" aria-label="Table ${x.id}">${x.id}</button>`; };
+  $('plan').innerHTML = `<div class="dj">Platines · DJ</div>${t(0)}<div class="floor">Dance floor</div>${t(1)}${t(2)}${t(3)}${[4,5,6,7,8,9,10,11,12,13].map(t).join('')}<div class="bar">Bar</div>`;
+  $('vip-t').textContent = vipT ? vipT + (vipT[0] === 'V' ? ' · Carré VIP' : '') : '—';
+}
+function nb(d) { vipN = Math.max(2, Math.min(20, vipN + d)); $('vip-n').textContent = vipN; }
+$('vip-ev').innerHTML = upcoming().slice(0, 8).map((e, i) => `<option value="${i}">${esc(fmt(e.date, {weekday:'short', day:'numeric', month:'short'}) + ' · ' + e.nom)}</option>`).join('') || '<option>Prochaine soirée</option>';
+$('vip-f').innerHTML = FORMULES.map(([f, p], i) => `<option value="${i}">${esc(f)} (${esc(p)})</option>`).join('');
+function sendVip() {
+  if (!vipT) return toast('Choisis une table sur le plan');
+  const e = upcoming()[+$('vip-ev').value] || NEXT;
+  st.resa.push({t: vipT, n: vipN, f: FORMULES[+$('vip-f').value][0], ev: e.nom, d: e.date, m: $('vip-msg').value.trim()});
+  save(); $('vip-msg').value = ''; vipT = null; renderPlan(); renderResa(); toast('Demande envoyée (démo) ✓');
+}
+function renderResa() {
+  $('my-resa').innerHTML = st.resa.map(r => `<div class="resa"><b>${esc(r.ev)}</b> · ${fmt(r.d, {day:'numeric', month:'short'})}<div class="mut">Table ${esc(r.t)} · ${r.n} pers. · ${esc(r.f)}${r.m ? ' · « ' + esc(r.m) + ' »' : ''}</div><span class="tag ta">En attente de confirmation</span></div>`).join('') || '<span class="mut">Aucune réservation pour l\'instant.</span>';
+  $('g-resa').innerHTML = [...st.resa.map(r => [`${r.t} · ${r.n} pers.`, r.f]), ['V2 · 8 pers.', 'Carré VIP (exemple)'], ['T3 · 6 pers.', 'Pack anniversaire (exemple)']]
+    .map(([a, b]) => `<div class="row"><span>${esc(a)}</span><span class="mut">${esc(b)}</span></div>`).join('');
+}
+function guest() {
+  st.guest = st.guest === NEXT.date ? null : NEXT.date; save(); renderGuest();
+  toast(st.guest ? 'Tu es sur la guest list : ' + NEXT.nom : 'Retiré·e de la guest list');
+}
+function renderGuest() { $('guest-bt').textContent = st.guest === NEXT.date ? '✓ Sur la guest list · ' + NEXT.nom : 'M\'inscrire sur la guest list'; $('g-guest').textContent = 186 + (st.guest === NEXT.date ? 1 : 0) + ' inscrits'; }
+
 // Espace gérant (chiffres fictifs)
 $('kpi').innerHTML = [['412', 'billets · ' + NEXT.nom.slice(0, 18)], ['1 284', 'abonnés à l\'app'], ['4,6★', 'note moyenne'], ['38 %', 'reviennent le mois suivant']]
   .map(([v, l]) => `<div><b>${v}</b><span class="mut">${esc(l)}</span></div>`).join('');
@@ -418,7 +580,7 @@ bars('cities', C.villes);
 bars('wanted', C.sondage);
 function sendPush() { const v = $('push').value.trim(); if (!v) return toast('Écris un message'); $('push').value = ''; toast('Envoyé (démo)'); }
 
-renderStars(); renderMeet(); renderPoll(); renderEvents(); renderArtists(); renderMe();
+renderStars(); renderMeet(); renderPoll(); renderEvents(); renderArtists(); renderMe(); renderFid(); renderSub(); renderAdded(); renderPlan(); renderResa(); renderGuest();
 const tab = new URLSearchParams(location.search).get('tab'); if (tab && $(tab)) go(tab);
 if (location.search.includes('test')) {
   console.assert(EVENTS.length > 0 && NEXT, 'soirées');
