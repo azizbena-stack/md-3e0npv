@@ -156,6 +156,42 @@ select,.step{width:100%;padding:12px 14px;border-radius:12px;border:1px solid va
 .step{display:flex;align-items:center;justify-content:space-between}
 .step button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);font-size:18px}
 .resa{border-left:3px solid var(--a);padding-left:10px;margin-top:10px}
+/* Stories (comme Disconnect) */
+.stories{display:flex;gap:14px;overflow-x:auto;padding:0 16px 16px;scrollbar-width:none}
+.stories button{flex:none;width:68px;text-align:center;font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stories .ring{width:68px;height:68px;border-radius:50%;padding:3px;background:conic-gradient(var(--a),var(--a2),var(--a));box-shadow:var(--glow);margin-bottom:6px}
+.stories .seen .ring{background:var(--line);box-shadow:none}
+.stories img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid var(--bg);display:block}
+#story{position:fixed;inset:0;z-index:15;background:#000;display:none;max-width:480px;margin:0 auto;color:#fff}
+#story.on{display:block}
+#story>img{width:100%;height:100%;object-fit:cover}
+#story .bars{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:4px;z-index:2}
+#story .bars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.3);overflow:hidden}
+#story .bars i b{display:block;height:100%;width:0;background:#fff}
+#story .bars i.done b{width:100%}
+#story .bars i.cur b{animation:fill 5s linear forwards}
+@keyframes fill{to{width:100%}}
+#story .hd{position:absolute;top:22px;left:12px;right:12px;display:flex;align-items:center;gap:10px;z-index:2;font-weight:700;text-shadow:0 1px 4px #000}
+#story .hd img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+#story .hd button{margin-left:auto;font-size:26px;line-height:1;color:#fff}
+#story .nav{position:absolute;inset:70px 0 90px;display:flex;z-index:1}
+#story .nav button{flex:1}
+#story .ft{position:absolute;left:0;right:0;bottom:0;padding:40px 16px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.85));text-align:center;font-size:12px;color:#ccc;z-index:2}
+/* Jeu concours */
+.prize{position:relative;overflow:hidden;padding:0}
+.prize img{width:100%;height:170px;object-fit:cover;display:block;opacity:.8}
+.prize .in{padding:16px}
+.prize .tag{position:absolute;top:10px;left:10px;margin:0;background:var(--a);border-color:var(--a);color:var(--aon);box-shadow:var(--glow)}
+/* Météo (Moi) */
+.wx-now{display:flex;align-items:center;gap:14px;margin:4px 0 12px}
+.wx-now .t{font:var(--fdw) 44px var(--fd),sans-serif;line-height:1}
+.wx-now .e{font-size:44px}
+.wx-days{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.wx-days>div{flex:1 0 54px;text-align:center;padding:10px 2px;border:1px solid var(--line);border-radius:12px;font-size:11px}
+.wx-days>div:first-child{border-color:var(--a)}
+.wx-days b{display:block;font-size:12px}
+.wx-days .e{font-size:20px;margin:4px 0}
+.wx-days .r{color:#6ab0ff;font-size:10px}
 button:focus-visible,a:focus-visible{outline:2px solid var(--a2);outline-offset:2px}
 header b{font-family:'Kaushan Script',cursive;text-transform:none;font-size:24px;font-weight:400;letter-spacing:0}
 </style>
@@ -170,7 +206,6 @@ header b{font-family:'Kaushan Script',cursive;text-transform:none;font-size:24px
   <div class="pad" style="margin-top:14px"><a class="btn" id="nx-buy" target="_blank" rel="noopener">Prendre mon billet</a></div>
   <div class="card mini" style="margin-top:12px" onclick="go('moi')"><div style="font-size:26px">🎟️</div><div style="flex:1"><b class="u" style="font-size:14px">Ma carte de fidélité</b><div class="mut" id="fid-mini"></div><div class="dots" id="fid-dots"></div></div><span class="mut">›</span></div>
   <div class="pad" style="margin:0 0 12px"><button class="btn ghost" onclick="go('vip')">Réserver une table VIP</button><button class="btn ghost" onclick="guest()" id="guest-bt">M'inscrire sur la guest list</button></div>
-  <div class="card" id="meteo-home"><span class="mut">Météo…</span></div>
   <h2>Le club</h2>
   <div class="card about" id="about"></div>
   <div class="stats" id="stats"></div>
@@ -206,10 +241,32 @@ header b{font-family:'Kaushan Script',cursive;text-transform:none;font-size:24px
 </section>
 
 <section id="moments">
+  <h2>Stories</h2>
+  <div class="stories" id="stories"></div>
   <h2>Moments</h2>
   <p class="mut pad" style="margin:-4px 0 12px" id="m-txt"></p>
   <div class="chips" id="mchips"><button data-k="all" class="on">Tout</button><button data-k="p">Photos</button><button data-k="reel">▶ Vidéos</button></div>
   <div class="grid" id="grid"></div>
+</section>
+
+<section id="concours">
+  <h2>Jeu concours</h2>
+  <div class="card prize">
+    <img id="ct-img" alt=""><span class="tag">À gagner</span>
+    <div class="in">
+      <b class="u" style="font-size:14px" id="ct-titre"></b>
+      <p class="mut" style="margin:6px 0 4px" id="ct-txt"></p>
+      <p class="mut" id="ct-info" style="margin-bottom:12px"></p>
+      <button class="btn" id="ct-btn" onclick="contest()">Je participe</button>
+      <button class="btn ghost" onclick="contestShare()">Inviter un pote (+1 chance)</button>
+      <p class="mut" style="margin-top:10px;font-size:11px">Concours fictif (démo). Le vrai règlement est fourni par le club.</p>
+    </div>
+  </div>
+  <div class="card"><b class="u" style="font-size:13px">Comment ça marche</b>
+    <div class="row"><span>1. Je participe</span><span class="mut">1 chance</span></div>
+    <div class="row"><span>2. J'invite mes potes</span><span class="mut">+1 chance par pote</span></div>
+    <div class="row"><span>3. Tirage au sort</span><span class="mut">résultat dans l'app</span></div>
+  </div>
 </section>
 
 <section id="jourj">
@@ -280,6 +337,14 @@ header b{font-family:'Kaushan Script',cursive;text-transform:none;font-size:24px
   <div class="card" id="rewards"></div>
   <div class="pad" style="margin-bottom:6px"><button class="btn" onclick="stamp()">Faire tamponner ma carte</button><p class="mut" style="margin-top:8px;text-align:center">Démo : en vrai, le staff scanne ton QR à l'entrée.</p></div>
   <div class="card" id="me-sum"></div>
+  <h2 id="wx-t">Météo</h2>
+  <div class="card" id="wx"><span class="mut">Chargement…</span></div>
+  <h2>Raccourcis</h2>
+  <div class="links">
+    <a href="#" onclick="go('concours');return false">Jeu concours</a>
+    <a href="#" onclick="go('vip');return false">Table VIP</a>
+    <a href="#" onclick="install();return false">Sur mon écran</a>
+  </div>
   <h2>Réglages</h2>
   <div class="card">
     <div class="row"><span>Nouvelles soirées</span><button class="sw" data-k="alert" aria-label="Nouvelles soirées"></button></div>
@@ -333,9 +398,17 @@ header b{font-family:'Kaushan Script',cursive;text-transform:none;font-size:24px
   <button data-t="events"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Soirées</button>
   <button data-t="lineup"><svg viewBox="0 0 24 24"><circle cx="9" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M12 18V5l9-2v13"/></svg>Line-up</button>
   <button data-t="moments"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/></svg>Moments</button>
+  <button data-t="concours"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M3 12h18M12 8v13M12 8c-2-4-6-4-6-1.5S10 8 12 8zm0 0c2-4 6-4 6-1.5S14 8 12 8z"/></svg>Concours</button>
   <button data-t="jourj"><svg viewBox="0 0 24 24"><path d="M4 7h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z"/></svg>Jour J</button>
   <button data-t="moi"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Moi</button>
 </nav>
+<div id="story" role="dialog" aria-label="Story">
+  <img id="st-img" alt="">
+  <div class="bars" id="st-bars"></div>
+  <div class="hd"><img src="le-scat-club-logo.jpg" alt=""><span id="st-name"></span><button onclick="closeStory()" aria-label="Fermer">×</button></div>
+  <div class="nav"><button onclick="stStep(-1)" aria-label="Précédente"></button><button onclick="stStep(1)" aria-label="Suivante"></button></div>
+  <div class="ft" id="st-ft"></div>
+</div>
 <div id="toast"></div>
 
 <script>
@@ -441,6 +514,58 @@ function renderGrid(k = 'all') {
 renderGrid();
 $('mchips').onclick = e => { const b = e.target.closest('button'); if (!b) return; [...$('mchips').children].forEach(c => c.classList.toggle('on', c === b)); renderGrid(b.dataset.k); };
 
+// Stories (démo : photos des posts ; version officielle = stories Instagram via l'API Meta)
+const NUMS = C.posts.map((_, i) => String(i + 1));
+const STORIES = C.stories || [
+  [fmt(NEXT.date, {day:'2-digit', month:'2-digit'}).replace('/', '.'), [...new Set([NEXT.img, ...upcoming().slice(1, 3).map(e => e.img)])]],
+  ['Vidéos', C.posts.map((p, i) => p[2] ? String(i + 1) : '').filter(Boolean).slice(0, 4)],
+  ['Le club', NUMS.slice(0, 3)], ['Coulisses', NUMS.slice(3, 7)], ['Souvenirs', NUMS.slice(7, 12)]].filter(s => s[1].length);
+st.seen ||= [];
+let sg = 0, si = 0;
+$('st-ft').textContent = `Démo : dans la version officielle, les vraies stories Instagram de @${C.instagram} arrivent ici automatiquement.`;
+function renderStories() {
+  $('stories').innerHTML = STORIES.map(([n, imgs], g) => `<button class="${st.seen.includes(n) ? 'seen' : ''}" onclick="openStory(${g})"><div class="ring"><img src="${img(imgs[0])}" alt=""></div>${esc(n)}</button>`).join('');
+}
+function showStory() {
+  const [n, imgs] = STORIES[sg];
+  $('st-img').src = img(imgs[si]); $('st-name').textContent = C.court + ' · ' + n;
+  $('st-bars').innerHTML = imgs.map((_, k) => `<i class="${k < si ? 'done' : k === si ? 'cur' : ''}"><b></b></i>`).join('');
+  $('st-bars').querySelector('.cur b').onanimationend = () => stStep(1);
+}
+function openStory(g) { sg = g; si = 0; $('story').classList.add('on'); showStory(); }
+function stStep(d) {
+  si += d;
+  if (si < 0) si = 0;
+  else if (si >= STORIES[sg][1].length) {
+    const n = STORIES[sg][0];
+    if (!st.seen.includes(n)) { st.seen.push(n); save(); }
+    if (++sg >= STORIES.length) return closeStory();
+    si = 0;
+  }
+  showStory();
+}
+function closeStory() { $('story').classList.remove('on'); $('st-bars').innerHTML = ''; renderStories(); }
+renderStories();
+
+// Jeu concours (fictif) : 2 places pour une soirée à au moins 3 jours, tirage la veille à 18h
+const CT = upcoming().find(e => new Date(e.date) - now() > 3 * 86400e3) || NEXT;
+const CT_DRAW = new Date(new Date(CT.date.slice(0, 10) + 'T18:00') - 86400e3);
+$('ct-img').src = img(CT.img);
+$('ct-titre').textContent = '2 places pour ' + (CT.lineup[0] || CT.nom);
+$('ct-txt').innerHTML = `${esc(CT.nom)} · ${fmt(CT.date, {weekday:'long', day:'numeric', month:'long'})}. Tirage au sort le <b>${fmt(CT_DRAW, {day:'numeric', month:'long'})} à 18h</b>. Bonus : chaque pote invité = 1 chance de plus.`;
+st.ct ||= 0; // 0 = pas inscrit, sinon nombre de chances
+function renderContest() {
+  const left = Math.ceil((CT_DRAW - now()) / 86400000);
+  $('ct-info').textContent = (left > 0 ? `Tirage dans ${left} jour${left > 1 ? 's' : ''}` : 'Tirage effectué') + (st.ct ? ` · tu as ${st.ct} chance${st.ct > 1 ? 's' : ''}` : '');
+  $('ct-btn').textContent = st.ct ? '✓ Inscrit·e au tirage' : 'Je participe';
+}
+function contest() { if (st.ct) return toast('Tu es déjà inscrit·e'); st.ct = 1; save(); renderContest(); toast('Inscrit·e ! Bonne chance 🍀'); }
+function contestShare() {
+  const t = `Je tente de gagner 2 places pour ${CT.lineup[0] || CT.nom} au ${C.nom} 🎉 ${location.href.split('?')[0]}`;
+  const done = () => { st.ct = Math.max(st.ct, 1) + 1; save(); renderContest(); toast('+1 chance au tirage'); };
+  navigator.share ? navigator.share({text: t}).then(done).catch(() => {}) : navigator.clipboard?.writeText(t).then(done);
+}
+
 // Jour J
 $('tk-club').textContent = C.nom; $('tk-ev').textContent = NEXT.nom;
 $('tk-when').textContent = fmt(NEXT.date, {weekday:'short', day:'numeric', month:'short'}) + ' · ' + NEXT.date.slice(11, 16) + (C.fermeture ? ' → ' + C.fermeture : '');
@@ -466,17 +591,20 @@ function renderSets() {
   }).join('');
 }
 renderSets(); setInterval(renderSets, 60000);
-$('meteo-t').textContent = 'Météo à ' + C.ville;
+$('meteo-t').textContent = $('wx-t').textContent = 'Météo à ' + C.ville;
 const wIcon = c => c === 0 ? '☀️' : c <= 3 ? '⛅' : c <= 48 ? '🌫️' : c <= 67 ? '🌧️' : c <= 77 ? '❄️' : c <= 82 ? '🌦️' : '⛈️';
 const day = NEXT.date.slice(0, 10);
-fetch(`https://api.open-meteo.com/v1/forecast?latitude=${C.lat}&longitude=${C.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FParis&forecast_days=16`)
+// Un seul appel Open-Meteo : soir de la soirée (Jour J) + maintenant et 7 jours (Moi)
+fetch(`https://api.open-meteo.com/v1/forecast?latitude=${C.lat}&longitude=${C.lon}&current=temperature_2m,weather_code,wind_speed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Europe%2FParis&forecast_days=16`)
   .then(r => r.json()).then(d => {
-    const D = d.daily, i = D.time.indexOf(day), j = i < 0 ? 0 : i;
-    const k = D.time.indexOf(new Date().toLocaleDateString('sv-SE'));
-    if (k >= 0) $('meteo-home').innerHTML = `<div class="row"><span>Aujourd'hui à ${esc(C.ville)} ${wIcon(D.weathercode[k])}</span><b>${Math.round(D.temperature_2m_min[k])}° / ${Math.round(D.temperature_2m_max[k])}°</b></div>`;
+    const D = d.daily, c = d.current, i = D.time.indexOf(day), j = i < 0 ? 0 : i;
     $('meteo').innerHTML = `<div class="row"><span>${i < 0 ? 'Aujourd\'hui' : fmt(day, {weekday:'short', day:'numeric', month:'short'})} ${wIcon(D.weathercode[j])}</span><span>${Math.round(D.temperature_2m_min[j])}° / ${Math.round(D.temperature_2m_max[j])}°</span></div>
       <p class="mut" style="margin-top:8px">Prévoir une veste pour la sortie : le vestiaire est là pour ça.</p>`;
-  }).catch(() => { $('meteo').innerHTML = '<span class="mut">Météo indisponible hors ligne.</span>'; $('meteo-home').hidden = true; });
+    $('wx').innerHTML = `<div class="wx-now"><span class="e">${wIcon(c.weather_code)}</span><div><div class="t">${Math.round(c.temperature_2m)}°</div>
+      <div class="mut">${esc(C.court)} · vent ${Math.round(c.wind_speed_10m)} km/h</div></div></div>
+      <div class="wx-days">${D.time.slice(0, 7).map((t, k) => `<div><b>${k ? fmt(t, {weekday:'short'}).replace('.', '') : 'Auj.'}</b><div class="e">${wIcon(D.weathercode[k])}</div>
+        ${Math.round(D.temperature_2m_max[k])}° <span class="mut">${Math.round(D.temperature_2m_min[k])}°</span><div class="r">${D.precipitation_probability_max[k] ?? 0} %</div></div>`).join('')}</div>`;
+  }).catch(() => { $('meteo').innerHTML = $('wx').innerHTML = '<span class="mut">Météo indisponible hors ligne.</span>'; });
 $('goto').innerHTML = `<div class="row"><span>📍 ${esc(C.nom)}</span><span class="mut">${esc(C.adresse)}</span></div>
   <div class="row"><span>🕛 Horaires</span><span class="mut">${esc(C.horaires)}</span></div>
   ${C.tel ? `<div class="row"><span>📞 Réservation</span><a class="mut" href="tel:${esc(C.tel)}">${esc(C.tel)}</a></div>` : ''}
@@ -580,11 +708,14 @@ bars('cities', C.villes);
 bars('wanted', C.sondage);
 function sendPush() { const v = $('push').value.trim(); if (!v) return toast('Écris un message'); $('push').value = ''; toast('Envoyé (démo)'); }
 
-renderStars(); renderMeet(); renderPoll(); renderEvents(); renderArtists(); renderMe(); renderFid(); renderSub(); renderAdded(); renderPlan(); renderResa(); renderGuest();
+renderStars(); renderMeet(); renderPoll(); renderEvents(); renderArtists(); renderMe(); renderFid(); renderSub(); renderAdded(); renderPlan(); renderResa(); renderGuest(); renderContest();
 const tab = new URLSearchParams(location.search).get('tab'); if (tab && $(tab)) go(tab);
 if (location.search.includes('test')) {
   console.assert(EVENTS.length > 0 && NEXT, 'soirées');
   console.assert(document.querySelectorAll('#grid a').length === C.posts.length, 'moments');
+  console.assert(document.querySelectorAll('nav button').length === 7 && $('ct-titre').textContent, 'concours');
+  const sv = [...st.seen]; openStory(0); for (let k = STORIES[0][1].length; k--;) stStep(1);
+  console.assert(sg === Math.min(1, STORIES.length - 1) || !$('story').classList.contains('on'), 'stories'); closeStory(); st.seen = sv; save();
   console.log('selftest ok');
 }
 </script>
